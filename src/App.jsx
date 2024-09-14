@@ -18,19 +18,16 @@ export default function App() {
       <nav>
         <ul>
           <li>
+            <NavLink to="/">Home</NavLink>
+          </li>
+          <li>
+            <NavLink to="/movies">All movies</NavLink>
+          </li>
+          <li>
             <NavLink to="/login">Log in</NavLink>
           </li>
-
           <li>
-            <NavLink to="/register">Register</NavLink>
-          </li>
-
-          <li>
-            <NavLink to="/courses">All Courses</NavLink>
-          </li>
-      
-          <li>
-            <NavLink to="/me">Your Schedule</NavLink>
+            <NavLink to="/me">Your ratings</NavLink>
           </li>
           <li>
             <LogoutButton onLogout={handleLogout} />

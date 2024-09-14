@@ -8,45 +8,50 @@ import {
   createRoutesFromElements,
 } from 'react-router-dom';
 import App from './App.jsx';
-//import './css/index.css';
-import AllCoursesPage from './pages/AllCoursesPage.jsx';
+import './css/index.css';
+import AllMoviesPage from './pages/AllMoviesPage.jsx';
 import ErrorPage from './pages/ErrorPage.jsx';
-import RegisterPage from './pages/RegisterPage.jsx';
+import IndexPage from './pages/IndexPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
-//import MovieDetailPage from './pages/MovieDetailPage.jsx';
-import YourStudentSchedulePage from './pages/YourStudentSchedulePage.jsx';
+import MovieDetailPage from './pages/MovieDetailPage.jsx';
+import YourRatingsPage from './pages/YourRatingsPage.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<ErrorPage />}>
       {/* Homepage */}
-      <Route index element={<LoginPage/>} />
+      <Route index element={<IndexPage />} />
 
-      {/* All Courses */}
+      {/* All Movies */}
       <Route
-        path="courses"
-        element={<AllCoursesPage />}
+        path="movies"
+        element={<AllMoviesPage />}
         loader={async () => {
-          const res = await axios.get('/api/courses');
-          return { courses: res.data };
+          const res = await axios.get('/api/movies');
+          return { movies: res.data };
+        }}
+      />
+
+      {/* Movie detail pages */}
+      <Route
+        path="movies/:movieId"
+        element={<MovieDetailPage />}
+        loader={async ({ params }) => {
+          const res = await axios.get(`/api/movies/${params.movieId}`);
+          return { movie: res.data };
         }}
       />
 
       {/* Login */}
-      <Route path="login" 
-      element={<LoginPage />} />  
+      <Route path="login" element={<LoginPage />} />
 
-      {/* Register*/}
-      <Route path="register" 
-      element={<RegisterPage />} />
-
-      {/* Your Schedule */}
+      {/* Your ratings */}
       <Route
         path="me"
-        element={<YourStudentSchedulePage />}
+        element={<YourRatingsPage />}
         loader={async () => {
-          const res = await axios.get('/api/courseReg/:studentId'); 
-          return { courseRegistration: res.data };
+          const res = await axios.get('/api/ratings');
+          return { ratings: res.data };
         }}
       />
     </Route>,

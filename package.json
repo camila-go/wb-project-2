@@ -1,10 +1,10 @@
 {
-  "name": "wb-courseapp",
+  "name": "wb-ratings",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node app.js -w src",
+    "dev": "nodemon app.js -w app.js -w src",
     "build": "vite build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
@@ -17,12 +17,12 @@
     "lodash": "^4.17.21",
     "morgan": "^1.10.0",
     "nodemon": "^3.0.1",
-    "pg": "^8.12.0",
+    "pg": "^8.11.1",
     "pg-hstore": "^2.3.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.14.1",
-    "sequelize": "^6.37.3",
+    "sequelize": "^6.32.1",
     "vite-express": "^0.9.1"
   },
   "devDependencies": {

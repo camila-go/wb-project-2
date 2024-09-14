@@ -1,30 +1,21 @@
 import { DataTypes, Model } from 'sequelize';
 import util from 'util';
 import connectToDB from './db.js';
-import { type } from 'os';
 
-export const db = await connectToDB('postgres://camila:@localhost:5432/courseapp');
+export const db = await connectToDB('postgresql:///ratings');
 
-export class Student extends Model {
+export class User extends Model {
   [util.inspect.custom]() {
     return this.toJSON();
   }
 }
 
-Student.init(
+User.init(
   {
-    studentId: {
+    userId: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-    },
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
@@ -37,79 +28,72 @@ Student.init(
     },
   },
   {
-    modelName: 'student',
+    modelName: 'user',
     sequelize: db,
   },
 );
 
-export class Course extends Model {
+export class Movie extends Model {
   [util.inspect.custom]() {
     return this.toJSON();
   }
 }
 
-Course.init(
+Movie.init(
   {
-    courseId: {
+    movieId: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    courseName: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    courseDates: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    overview: {
+      type: DataTypes.TEXT,
     },
-    location: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    releaseDate: {
+      type: DataTypes.DATE,
     },
-    schedule: {
+    posterPath: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    tuition: {
-      type: DataTypes.STRING,
-      allowNull: false,
     },
   },
   {
-    modelName: 'course',
+    modelName: 'movie',
     sequelize: db,
   },
 );
 
-export class CourseRegistration extends Model {
+export class Rating extends Model {
   [util.inspect.custom]() {
     return this.toJSON();
   }
 }
 
-CourseRegistration.init(
+Rating.init(
   {
-    crId: {
+    ratingId: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
+    score: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
-    modelName: 'courseRegistration',
+    modelName: 'rating',
     sequelize: db,
     timestamps: true,
     updatedAt: false,
   },
 );
 
-Course.hasMany(CourseRegistration, { foreignKey: 'courseId' });
-CourseRegistration.belongsTo(Course, { foreignKey: 'courseId' });
+Movie.hasMany(Rating, { foreignKey: 'movieId' });
+Rating.belongsTo(Movie, { foreignKey: 'movieId' });
 
-Student.hasMany(CourseRegistration, { foreignKey: 'studentId' });
-CourseRegistration.belongsTo(Student, { foreignKey: 'studentId' });
-
-// Sync models  
-await db.sync({ force: true }); // Will drop existing tables and create new ones  
-console.log('Tables created or updated.'); 
+User.hasMany(Rating, { foreignKey: 'userId' });
+Rating.belongsTo(User, { foreignKey: 'userId' });
