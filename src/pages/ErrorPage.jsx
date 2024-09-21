@@ -10,7 +10,7 @@ function ErrorPage() {
         <>
           <h1>Oops!</h1>
           <p>You must be logged in to do that.</p>
-          <Link to="/">Click here to go back to the homepage</Link>
+          <Link to="/">Click here to go back to the login page</Link>
         </>
       );
     }
@@ -21,7 +21,7 @@ function ErrorPage() {
       <h1>Uh oh.</h1>
       <p>Sorry, an unexpected error has occurred.</p>
       <p>
-        <i>{error.statusText || error.message}</i>
+        {/* <i>{error.statusText || error.message}</i> */}
       </p>
     </>
   );

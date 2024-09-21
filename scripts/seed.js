@@ -1,59 +1,66 @@
 import lodash from 'lodash';
-import { Movie, Rating, User, db } from '../src/model.js';
-import movieData from './data/movies.json' assert { type: 'json' };
+import { Course, CourseRegistration, Student, db } from '../src/model.js';
+import courseData from './data/courses.json' assert { type: 'json' };
+
+async function seedDatabase() { 
 
 console.log('Syncing database...');
 await db.sync({ force: true });
 
 console.log('Seeding database...');
 
-const moviesInDB = await Promise.all(
-  movieData.map((movie) => {
-    const releaseDate = new Date(Date.parse(movie.releaseDate));
-    const { title, overview, posterPath } = movie;
+let coursesInDB;  // Declare the variable outside of the try block  
 
-    const newMovie = Movie.create({
-      title: title,
-      overview: overview,
-      posterPath: posterPath,
-      releaseDate: releaseDate,
-    });
-
-    return newMovie;
+try {
+  coursesInDB = await Promise.all(
+  courseData.map((courseDataItem) => {
+    const { courseName, courseDates, location, schedule, tuition } = courseDataItem;
+    return Course.create({ courseName, courseDates, location, schedule, tuition });
   }),
 );
-
-console.log(moviesInDB);
-
-const usersToCreate = [];
+  console.log('Courses successfully created:', coursesInDB);  
+} catch (error){
+  console.error('Error creating courses:',error); 
+  
+}
+const studentsToCreate = [];
 for (let i = 0; i < 10; i++) {
-  const email = `user${i}@test.com`;
-  usersToCreate.push(User.create({ email: email, password: 'test' }));
+  const firstName = `first${i}`;
+  const lastName = `last${i}`;
+  const email = `student${i}@test.com`;
+  studentsToCreate.push(Student.create({ firstName: firstName, lastName: lastName, email: email, password: 'test' }));
 }
 
-const usersInDB = await Promise.all(usersToCreate);
+const studentsInDB = await Promise.all(studentsToCreate);
 
-console.log(usersInDB);
+console.log(studentsInDB);
 
-const ratingsInDB = await Promise.all(
-  usersInDB.flatMap((user) => {
-    // Get ten random movies
-    const randomMovies = lodash.sampleSize(moviesInDB, 10);
+try {
+  const courseRegistrations = await Promise.all(
+  studentsInDB.flatMap((student) => {
+    // Get ten random courses
+    const randomCourses = lodash.sampleSize(coursesInDB, 10);
 
-    // Create a rating for each movie
-    const movieRatings = randomMovies.map((movie) => {
-      return Rating.create({
-        score: lodash.random(1, 5),
-        userId: user.userId,
-        movieId: movie.movieId,
+    // Create a registration for each course
+    const registrations = randomCourses.map(async (course) => {  
+      return CourseRegistration.create({  
+        studentId: student.studentId,  
+        courseId: course.courseId, 
       });
     });
 
-    return movieRatings;
+    return registrations;
   }),
 );
 
-console.log(ratingsInDB);
+console.log('Course registrations successfully created:', courseRegistrations);  
+} catch (error) {  
+  console.error('Error creating course registrations:', error);  
+}  
 
 await db.close();
 console.log('Finished seeding database!');
+}  
+
+// Run the seeding function  
+seedDatabase().catch((error) => console.error('Error during seeding:', error));  

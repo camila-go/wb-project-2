@@ -21,13 +21,16 @@ export default function App() {
             <NavLink to="/">Home</NavLink>
           </li>
           <li>
-            <NavLink to="/movies">All movies</NavLink>
+            <NavLink to="/courses">All Courses</NavLink>
           </li>
           <li>
             <NavLink to="/login">Log in</NavLink>
+          </li>          
+          <li>
+            <NavLink to="/register">Register</NavLink>
           </li>
           <li>
-            <NavLink to="/me">Your ratings</NavLink>
+            <NavLink to="/me">Your Schedule</NavLink>
           </li>
           <li>
             <LogoutButton onLogout={handleLogout} />
